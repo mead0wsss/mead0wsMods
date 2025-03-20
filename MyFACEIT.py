@@ -11,7 +11,7 @@ __version__ = (1, 0, 0)
 
 # scope: hikka_only
 # scope: hikka_min 1.3.3
-# meta developer: @mead0ws_modules
+# meta developer: @mead0wssMods
 # meta banner: https://x0.at/Hu25.jpg
 
 
