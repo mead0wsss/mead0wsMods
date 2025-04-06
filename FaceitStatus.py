@@ -59,6 +59,9 @@ class FaceitStatus(loader.Module):
 
     @loader.loop(interval=60)
     async def update_status_loop(self):
+        await self.update_status()
+
+    async def update_status(self):
         nickname = self.config["nickname"]
         if not nickname:
             return
@@ -72,8 +75,6 @@ class FaceitStatus(loader.Module):
                     if faceit_lvl in self.faceit_level_emojis:
                         emoji_id = self.faceit_level_emojis[faceit_lvl]
                         await self._client.set_status(emoji_id)
-                    else:
-                        await self._client.set_status(None)
                 else:
                     logging.error("Ошибка при запросе к FACEIT API: %s", response.status)
 
@@ -81,6 +82,7 @@ class FaceitStatus(loader.Module):
     async def on_faccmd(self, event):
         """Включить обновление статуса."""
         self.config["enabled"] = True
+        await self.update_status()
         self.update_status_loop.start()
         await event.edit("✅ Обновление статуса включено.")
 
@@ -90,3 +92,4 @@ class FaceitStatus(loader.Module):
         self.config["enabled"] = False
         self.update_status_loop.stop()
         await event.edit("❌ Обновление статуса выключено.")
+
