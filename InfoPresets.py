@@ -117,7 +117,12 @@ class InfoPresets(loader.Module):
                 [{"text": self.strings["cancel"], "callback": self._cancel_callback, "args": (preset_name,)}]
             ]
         )
-        self._waiting_param = (call.from_user.id, preset_name, param, call)
+        self._waiting_param = {
+            "user_id": call.from_user.id,
+            "preset_name": preset_name,
+            "param": param,
+            "call": call
+        }
 
     async def _cancel_callback(self, call: InlineCall, preset_name: str):
         """Обработчик отмены"""
@@ -138,24 +143,27 @@ class InfoPresets(loader.Module):
                     ]
                 ]
             )
+        self._waiting_param = None
 
     async def _done_callback(self, call: InlineCall, preset_name: str):
         """Обработчик завершения"""
         await call.delete()
         if preset_name in self._active_forms:
             del self._active_forms[preset_name]
+        self._waiting_param = None
 
     async def watcher(self, message: Message):
         """Обработчик ввода значений параметров"""
-        if not hasattr(self, "_waiting_param"):
+        if not hasattr(self, "_waiting_param") or not self._waiting_param:
             return
             
-        user_id, preset_name, param, call = self._waiting_param
-        
-        if message.sender_id != user_id:
+        waiting = self._waiting_param
+        if message.sender_id != waiting["user_id"]:
             return
             
         value = message.raw_text
+        preset_name = waiting["preset_name"]
+        param = waiting["param"]
         
         if param in ["pp_to_banner", "show_heroku"]:
             if value.lower() not in ["true", "false"]:
@@ -176,7 +184,6 @@ class InfoPresets(loader.Module):
 
         await utils.answer(message, self.strings["param_set"].format(param, value, preset_name))
         
-
         if preset_name in self._active_forms:
             await self._active_forms[preset_name].edit(
                 self.strings["config_menu"].format(preset_name),
@@ -195,7 +202,7 @@ class InfoPresets(loader.Module):
                 ]
             )
         
-        delattr(self, "_waiting_param")
+        self._waiting_param = None
         
     async def delprcmd(self, message: Message):
         """Удалить пресет."""
@@ -302,4 +309,5 @@ class InfoPresets(loader.Module):
                     heroku_info.config[param] = value
                 else:
                     logger.warning(f"Параметр {param} не найден в конфиге HerokuInfo")
+
         await utils.answer(message, self.strings["preset_loaded"].format(args))
