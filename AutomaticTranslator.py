@@ -90,3 +90,4 @@ class AutomaticTranslator(loader.Module):
         else:
             await message.edit("❌ Ошибка при переводе сообщения.")
 
+# артемко лох
