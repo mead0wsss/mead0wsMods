@@ -18,7 +18,7 @@ from .. import loader, utils
 
 @loader.tds
 class TwitchMod(loader.Module):
-    """Модуль для работы с Twitch API"""
+    """Модуль для работы с Twitch"""
     strings = {"name": "Twitch"}
 
     def __init__(self):
