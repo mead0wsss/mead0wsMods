@@ -134,3 +134,4 @@ class SenderGifts(loader.Module):
                 f"❌ Ошибка при отправке подарка: {str(e)}",
                 reply_markup=None
             )
+# эрон Дон Дон 
