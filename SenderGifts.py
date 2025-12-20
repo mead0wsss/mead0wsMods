@@ -25,6 +25,7 @@ import logging
 @loader.tds
 class SenderGifts(loader.Module):
     """Модуль для отправки подарков Telegram прямиком в чате"""
+    
     strings = {
         "name": "SenderGifts",
         "usage": "<emoji document_id=4958526153955476488>❌</emoji> Используйте в формате: <code>.sendgift @username текст</code> или реплай + <code>.sendgift текст</code>",
@@ -54,6 +55,7 @@ class SenderGifts(loader.Module):
             {"id": 5170144170496491616, "emoji": "🎂", "name": "Тортик"},
             {"id": 5170314324215857265, "emoji": "💐", "name": "Цветы"},
             {"id": 5170564780938756245, "emoji": "🚀", "name": "Ракета"},
+            {"id": 5922558454332916696, "emoji": "🎄", "name": "Ёлка"},
         ],
         100: [
             {"id": 5168043875654172773, "emoji": "🏆", "name": "Кубок"},
